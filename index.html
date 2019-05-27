@@ -8,8 +8,10 @@
 
   <body onload="setup()">
     <p><img src="./geek.png"></p>
+    <div id="loading">ONNX Model being loaded from server</div>
     <label for="image" id="lbl" class="custom-file-upload" style="visibility: hidden">Take Picture</p>
     <div><input type="file" id="image" accept="image/*" capture="user"/></div>
+    <div id="scoring" style="visibility: hidden">Classifying image using ONNX model</div>
     <div><canvas id="canvas"></canvas></div>
 
     <p id="output" class="output"></p>
@@ -22,10 +24,12 @@
         	var model = "./densenet.onnx";
         	await myOnnxSession.loadModel(model);
 		console.log('model loaded');
+		document.getElementById('loading').style.visibility = 'hidden';
 		document.getElementById('lbl').style.visibility = 'visible';
 	}
 
 	document.getElementById('image').onchange = function(e) {
+		document.getElementById('scoring').style.visibility = 'visible';
 		var img = new Image();
   		img.onload = draw;
   		img.onerror = failed;
@@ -59,6 +63,7 @@
 		ctx.drawImage(this, cropw,croph,twidth,theight,0,0,224,224);
 		console.log('image should be drawn');
 		score(ctx);
+		document.getElementById('scoring').style.visibility = 'hidden';
 	}
 
 	function failed() {
