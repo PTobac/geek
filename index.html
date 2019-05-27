@@ -1,0 +1,81 @@
+<html>
+  <head>
+	<link rel="stylesheet" style="text/css" href="onnx.css" />
+	<script src="/javascript/runModel.js"></script>
+	<script src="/javascript/ndarray-browser-min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/onnxjs/dist/onnx.min.js"></script>
+  </head>
+
+  <body onload="setup()">
+    <p><img src="./geek.png"></p>
+    <label for="image" id="lbl" class="custom-file-upload" style="visibility: hidden">Take Picture</p>
+    <div><input type="file" id="image" accept="image/*" capture="user"/></div>
+    <div><canvas id="canvas"></canvas></div>
+
+    <p id="output" class="output"></p>
+
+    <!-- Load ONNX.js -->
+    <!-- Code that consume ONNX.js -->
+    <script>
+	myOnnxSession = new onnx.InferenceSession();
+	async function setup() {
+        	var model = "./densenet.onnx";
+        	await myOnnxSession.loadModel(model);
+		console.log('model loaded');
+		document.getElementById('lbl').style.visibility = 'visible';
+	}
+
+	document.getElementById('image').onchange = function(e) {
+		var img = new Image();
+  		img.onload = draw;
+  		img.onerror = failed;
+  		img.src = URL.createObjectURL(this.files[0]);
+	};
+
+	function draw() {
+		var canvas = document.getElementById('canvas');
+		var croph=0;
+		var cropw=0;
+		var twidth=0;
+		var theight=0;
+		canvas.width = 224;
+		canvas.height = 224;
+		if (this.height>this.width) {
+			croph=(this.height-this.width)/2;
+			theight=this.height-croph;
+			twidth=this.width;
+			}
+		if (this.height<this.width) {
+			cropw=(this.width-this.height)/2;
+			twidth=this.width-cropw;
+			theight=this.height;
+			}
+		if (this.height==this.width) {
+			theight=this.height;
+			twidth=this.width;
+			}
+		console.log('croph,cropw,theight,twidth: '+croph+', '+cropw+', '+theight+', '+twidth);
+		var ctx = canvas.getContext('2d');
+		ctx.drawImage(this, cropw,croph,twidth,theight,0,0,224,224);
+		console.log('image should be drawn');
+		score(ctx);
+	}
+
+	function failed() {
+		console.error("The provided file couldn't be loaded as an Image media");
+	}
+
+	function score (ctx) {
+		runModel( myOnnxSession, ctx )
+                    .then((rtrn) => {
+			var geekpct = Math.floor(rtrn["1"] * 100,2) + '%';
+			document.getElementById('output').innerHTML='Your Geekiness: '+geekpct;
+                    })
+                    .catch((err) => alert(err))
+
+            }
+
+	
+    </script>
+  </body>
+</html>
