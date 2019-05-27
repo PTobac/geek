@@ -8,10 +8,10 @@
 
   <body onload="setup()">
     <p><img src="./geek.png"></p>
-    <div id="loading">ONNX Model being loaded from server</div>
-    <label for="image" id="lbl" class="custom-file-upload" style="visibility: hidden">Take Picture</p>
+    <div class="message" id="loading">ONNX Model being loaded from server</div>
+    <label for="image" id="lbl" class="custom-file-upload" style="visibility: hidden">Take Picture</label>
     <div><input type="file" id="image" accept="image/*" capture="user"/></div>
-    <div id="scoring" style="visibility: hidden">Classifying image using ONNX model</div>
+    <div class="message" id="scoring" style="visibility: hidden">Classifying image using ONNX model</div>
     <div><canvas id="canvas"></canvas></div>
 
     <p id="output" class="output"></p>
