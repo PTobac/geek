@@ -1,34 +1,94 @@
 <html>
   <head>
-	<link rel="stylesheet" style="text/css" href="onnx.css" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 	<script src="/javascript/runModel.js"></script>
 	<script src="/javascript/ndarray-browser-min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/onnxjs/dist/onnx.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
   </head>
 
-  <body onload="setup()">
-    <p><img src="./geek.png"></p>
-    <div class="message" id="loading">ONNX Model being loaded from server</div>
-    <label for="image" id="lbl" class="custom-file-upload" style="visibility: hidden">Take Picture</label>
-    <div><input type="file" id="image" accept="image/*" capture="user"/></div>
-    <div class="message" id="scoring" style="visibility: hidden">Classifying image using ONNX model</div>
-    <div><canvas id="canvas"></canvas></div>
+  <body onload="setup()" style="background: url(https://www.sas.com/en_gb/_jcr_content/socialShareImage.img.png) fixed center no-repeat;
+background-size: cover;">
 
-    <p id="output" class="output"></p>
+<!-- Ideally the app takes 100% of the width and heigth of the (mobile) screen.  Preferably no scrolling nor half filled screen. Text should be sized accordingly -->
 
-    <!-- Load ONNX.js -->
-    <!-- Code that consume ONNX.js -->
+    <div class="container">
+<!-- App title row -->
+	<div class="row">
+                <div class="col text-center">
+                        <div class="alert alert-light">
+	                        <h1>Discover Your True Geekiness</h1>
+			</div>
+                </div>
+        </div>
+
+<!-- Row to show ONNX file is being loaded, should disappear when loaded.  Text should remain, but gif or loading icon could be added. Currently entire rows are being rendered visible/hidden using js, but different messages can replace each other as well.-->
+    	<div class="row" id="loading">
+		<div class="col text-center">
+			<div class="alert alert-light">
+				<h2>ONNX Model being loaded</h2>
+			</div>
+		</div>
+	</div>
+
+<!-- Row with Take Picture button.  Should only appear when the previous row disappears. Phone camera should be accessed in selfie-mode.  Selecting Use Photo on the phone, should trigger the draw function that writes the images to the canvas element and triggers the scoring. -->
+    	<div class="row" id="image" style="visibility: hidden;">
+		<div class="col text-center">
+			<div class="btn btn-light" style="display:inline-block;">
+			<label>
+				<span><h3>Take Picture</h3></span>
+				<input id="imgbtn" type="file" accept="image/*" capture="user" style="display:none;">
+			</label>
+			</div>
+		</div>
+	</div>
+
+<!-- Row to show image is being scored, should disappear when image is scored.  Text should remain, but gif or loading icon could be added.-->
+	<div class="row" id="scoring" style="visibility: hidden;">
+                <div class="col text-center">
+                        <div class="alert alert-light">
+	                        <h2>Classifying image using ONNX model.</h2>
+                	</div>
+		</div>
+        </div>
+	
+<!-- Row with the canvas element in which the picture taken will be drawn using js.  Should appear just after submitting the photo.  Currently only appears after the image has been classified. On PC the picture is show correctly, on mobile it's flipped 90 degrees.-->
+        <div class="row">
+                <div class="col text-center">
+			<canvas id="canvas"></canvas>
+                </div>
+        </div>
+
+<!-- Row showing the ouput of the scoring.  Should only appear when scoring is done -->
+        <div class="row" id="outputrow" style="visibility:hidden;">
+                <div class="col text-center">
+			<div id="output" class="alert alert-light"></div>
+		</div>
+	</div>
+    </div>
+
+<!-- Code that consumes ONNX.js -->
     <script>
+
+//Create new ONNX.js inferencesession first
 	myOnnxSession = new onnx.InferenceSession();
+	
+//Function to load onnx model into inferencesession, and show/hide the necessary HTML items
 	async function setup() {
         	var model = "./densenet.onnx";
         	await myOnnxSession.loadModel(model);
 		console.log('model loaded');
 		document.getElementById('loading').style.visibility = 'hidden';
-		document.getElementById('lbl').style.visibility = 'visible';
+		document.getElementById('image').style.visibility = 'visible';
 	}
 
-	document.getElementById('image').onchange = function(e) {
+//When image is submitted call function draw, show/hide necessary HTML items
+	document.getElementById('imgbtn').onchange = function(e) {
+                document.getElementById('outputrow').style.visibility = 'hidden';
 		document.getElementById('scoring').style.visibility = 'visible';
 		var img = new Image();
   		img.onload = draw;
@@ -36,6 +96,7 @@
   		img.src = URL.createObjectURL(this.files[0]);
 	};
 
+//Function to crop/resize phone image to 224x224, draw image to canvas element, call score function and make scoring message invisible when done.  Currently image is drawn after the score is returned from the score function, but can be drawn right after selecting it, while the scoring message is being shown.
 	function draw() {
 		var canvas = document.getElementById('canvas');
 		var croph=0;
@@ -70,11 +131,14 @@
 		console.error("The provided file couldn't be loaded as an Image media");
 	}
 
+//Score function calling the runModel.js function, selecting the right output, rounding it and showing it
 	function score (ctx) {
 		runModel( myOnnxSession, ctx )
                     .then((rtrn) => {
 			var geekpct = Math.floor(rtrn["1"] * 100,2) + '%';
-			document.getElementById('output').innerHTML='Your Geekiness: '+geekpct;
+			document.getElementById('output').innerHTML='<h2>Your Geekiness is estimated to be '+geekpct+'</h2>';
+	                document.getElementById('outputrow').style.visibility = 'visible';
+
                     })
                     .catch((err) => alert(err))
 
