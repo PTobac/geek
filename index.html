@@ -16,7 +16,8 @@
 background-size: cover;">
 
 <!-- Ideally the app takes 100% of the width and heigth of the (mobile) screen.  Preferably no scrolling nor half filled screen. Text should be sized accordingly -->
-
+<!-- Currently entire rows in the container are being rendered visible/hidden using js, but different messages can replace each other as well. -->
+<!-- All formats, classes can be changed -->
     <div class="container">
 <!-- App title row -->
 	<div class="row">
@@ -27,7 +28,7 @@ background-size: cover;">
                 </div>
         </div>
 
-<!-- Row to show ONNX file is being loaded, should disappear when loaded.  Text should remain, but gif or loading icon could be added. Currently entire rows are being rendered visible/hidden using js, but different messages can replace each other as well.-->
+<!-- Row to show ONNX file is being loaded, should disappear when loaded.  Text should remain, but gif or loading icon could be added. -->
     	<div class="row" id="loading">
 		<div class="col text-center">
 			<div class="alert alert-light">
