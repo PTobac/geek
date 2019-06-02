@@ -1,0 +1,75 @@
+@font-face {
+  font-family: "avenir-regular";
+  src: url("/fonts/avenir/avenir-regular.ttf");
+}
+
+@font-face {
+  font-family: "avenir-ultralight";
+  src: url("/fonts/avenir/avenir-ultralight.ttf");
+}
+@font-face {
+  font-family: "avenir-light";
+  src: url("/fonts/avenir/avenir-light.ttf");
+}
+@font-face {
+  font-family: "avenir-medium";
+  src: url("/fonts/avenir/avenir-medium.ttf");
+}
+@font-face {
+  font-family: "avenir-bold";
+  src: url("/fonts/avenir/avenir-bold.ttf");
+}
+
+body {
+  /* background: url(https://www.sas.com/en_gb/_jcr_content/socialShareImage.img.png) fixed center no-repeat;    
+    background-size: cover; */
+  background-image: linear-gradient(to top right, #8c2a90, #db3856);
+  font-family: "avenir-regular", Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "avenir-light", Arial, Helvetica, sans-serif;
+}
+
+.btn-primary {
+  background-color: #8e2f8a;
+  border-color: #8e2f8a;
+  color: #fff;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:visited,
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #8e2f8a;
+  border-color: #8e2f8a;
+  color: #fff;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 3%,
+    rgba(0, 0, 0, 0) 29%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+canvas {
+  max-height: 250px;
+}
+
+.text-result {
+  font-family: "avenir-light", Arial, Helvetica, sans-serif;
+  color: #fff;
+}
+.text-geekpct {
+  font-family: "avenir-bold", Arial, Helvetica, sans-serif;
+  font-size: 5rem;
+  color: #fff;
+  display: block;
+}
