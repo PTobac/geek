@@ -36,6 +36,10 @@ h6 {
   font-family: "avenir-light", Arial, Helvetica, sans-serif;
 }
 
+sup {
+  font-size: 0.5rem;
+}
+
 .btn-primary {
   background-color: #8e2f8a;
   border-color: #8e2f8a;
@@ -61,6 +65,7 @@ h6 {
 
 canvas {
   max-height: 250px;
+  transform: rotate(90deg);
 }
 
 .text-result {
@@ -72,4 +77,13 @@ canvas {
   font-size: 5rem;
   color: #fff;
   display: block;
+  line-height: 1;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  color: #ca9ec8;
+  font-size: 0.35rem;
+  padding: 1rem;
 }
