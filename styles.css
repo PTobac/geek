@@ -82,7 +82,7 @@ canvas {
 
 .footer {
   position: absolute;
-  bottom: 0;
+  bottom: -100;
   color: #ca9ec8;
   font-size: 0.35rem;
   padding: 1rem;
