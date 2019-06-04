@@ -2,7 +2,7 @@
 
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' http://viya3-4.ps-cp.sashq-d.openstack.sas.com 'unsafe-inline' 'unsafe-eval'">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'">
 
 	<link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="styles.css" />
@@ -169,7 +169,7 @@
 		function score(ctx) {
 			runModel(myOnnxSession, ctx)
 				.then(rtrn => {
-					var geekpct = Math.floor(rtrn["1"] * 100, 2) + "%";
+					var geekpct = Math.floor(rtrn["0"] * 100, 2) + "%";
 					document.getElementById("output").innerHTML =
 						"<span class=\"text-result\">Your Geekiness is estimated to be <span class=\"text-geekpct\">" + geekpct + "</span></span>";
 					document.getElementById("outputrow").style.visibility = "visible";
